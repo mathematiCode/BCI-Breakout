@@ -3,8 +3,10 @@
 # Game engine
 pygame>=2.6.0
 
-# For future BCI integration, uncomment the appropriate library:
-# brainflow>=5.0.0  # For OpenBCI, Muse, etc.
-# mne>=1.0.0        # For advanced signal processing
-# scipy>=1.10.0     # For filtering and DSP
-# numpy>=1.24.0     # For numerical operations
+# BCI integration (OpenBCI Ganglion via BrainFlow)
+brainflow>=5.0.0
+numpy>=1.24.0
+
+# Optional: For advanced signal processing
+# mne>=1.0.0
+# scipy>=1.10.0

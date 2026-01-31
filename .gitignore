@@ -1,3 +1,11 @@
 
+# Virtual environment
 /venv
-game_session_20260131_141927.csv
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Game session data (generated during play)
+game_session_*.csv

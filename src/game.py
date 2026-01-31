@@ -118,6 +118,10 @@ class BreakoutGame:
             print(f"  Average FPS: {stats['avg_fps']:.1f}")
             print(f"  Final score: {self.score}")
 
+        # Cleanup input handler (important for BrainFlow)
+        if hasattr(self.input_handler, 'cleanup'):
+            self.input_handler.cleanup()
+
         pygame.quit()
 
     def update(self, dt):
