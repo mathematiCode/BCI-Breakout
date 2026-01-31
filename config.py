@@ -69,3 +69,43 @@ SHOW_INPUT_BARS = True         # Show visual bars for left/right input
 INPUT_BAR_HEIGHT = 10
 INPUT_BAR_WIDTH = 200
 INPUT_BAR_Y = 10
+
+# =============================================================================
+# BCI Configuration (OpenBCI Ganglion via BrainFlow)
+# =============================================================================
+
+# Connection mode: 'dongle', 'streaming', or 'synthetic'
+#   - 'dongle': Direct connection via BLED112 dongle (requires dongle hardware)
+#   - 'streaming': Receive data from OpenBCI GUI via BrainFlow network streaming
+#   - 'synthetic': Fake data for testing (no hardware needed)
+BCI_CONNECTION_MODE = 'streaming'  # Change to 'dongle' if using BLED112 directly
+
+# Dongle settings (only used if BCI_CONNECTION_MODE = 'dongle')
+BCI_SERIAL_PORT = 'COM3'       # Serial port for BLED112 dongle
+
+# Streaming settings (only used if BCI_CONNECTION_MODE = 'streaming')
+# These must match the OpenBCI GUI's Networking → UDP settings
+BCI_STREAM_IP = '127.0.0.1'    # Localhost (same computer)
+BCI_STREAM_PORT = 12345        # Port number from OpenBCI GUI Stream 1
+
+# Channel mapping (Ganglion has 4 channels: 0-3)
+# Physical pins: +1=channel 0, +2=channel 1, +3=channel 2, +4=channel 3
+BCI_LEFT_CHANNEL = 0           # Pin +1 on Ganglion → left activation
+BCI_RIGHT_CHANNEL = 1          # Pin +2 on Ganglion → right activation
+
+# Signal processing
+BCI_SAMPLE_RATE = 200          # Ganglion native sample rate (Hz)
+BCI_WINDOW_SIZE = 256          # Samples for FFT (~1.28 seconds at 200Hz)
+BCI_FREQ_LOW = 10.0            # Lower frequency bound (Hz) - alpha band
+BCI_FREQ_HIGH = 20.0           # Upper frequency bound (Hz) - low beta
+BCI_FILTER_ORDER = 4           # Bandpass filter order
+
+# Normalization (maps raw band power to 0-1 range)
+BCI_NORMALIZATION = 'sigmoid'  # 'sigmoid', 'minmax', or 'log'
+BCI_SIGMOID_GAIN = 0.005       # Sigmoid steepness (lower = gentler curve)
+BCI_SIGMOID_MIDPOINT = 500.0   # Sigmoid center point (around your mean power)
+BCI_LOG_SCALE_MIN = 0.0        # Log scale minimum (for 'log' normalization)
+BCI_LOG_SCALE_MAX = 1000.0     # Log scale maximum (for 'log' normalization)
+
+# Smoothing (reduces jitter from noisy EEG)
+BCI_SMOOTHING_FACTOR = 0.3     # Exponential smoothing (0=no smoothing, 1=instant)
