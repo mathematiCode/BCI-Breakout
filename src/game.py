@@ -63,6 +63,7 @@ class BreakoutGame:
         self.waiting_to_start = True
         self.paused = False
         self.game_over = False
+        self.testing_mode = False
         self.score = 0
         self.lives = 3
 
@@ -83,11 +84,18 @@ class BreakoutGame:
             events = pygame.event.get()
             self.input_handler.update(events)
 
-            # Check for start/pause/restart
+            # Check for start/pause/restart/testing mode
             for event in events:
                 if event.type == pygame.KEYDOWN:
+                    # Check for Shift+Space (testing mode toggle)
                     if event.key == pygame.K_SPACE:
-                        if self.waiting_to_start:
+                        keys = pygame.key.get_pressed()
+                        if keys[pygame.K_LSHIFT] or keys[pygame.K_RSHIFT]:
+                            # Toggle testing mode
+                            self.testing_mode = not self.testing_mode
+                            mode_status = "ENABLED" if self.testing_mode else "DISABLED"
+                            print(f"\nTesting Mode {mode_status} (Infinite Lives)")
+                        elif self.waiting_to_start:
                             # Start the game
                             self.waiting_to_start = False
                         elif self.game_over:
@@ -142,13 +150,19 @@ class BreakoutGame:
 
         # Check if ball is lost
         if self.ball.is_lost():
-            self.lives -= 1
-            self.logger.log_event('ball_lost', {'lives_remaining': self.lives})
+            if not self.testing_mode:
+                # Normal mode: lose a life
+                self.lives -= 1
+                self.logger.log_event('ball_lost', {'lives_remaining': self.lives})
 
-            if self.lives <= 0:
-                self.game_over = True
-                self.logger.log_event('game_over', {'final_score': self.score})
+                if self.lives <= 0:
+                    self.game_over = True
+                    self.logger.log_event('game_over', {'final_score': self.score})
+                else:
+                    self.ball.reset()
             else:
+                # Testing mode: infinite lives, just reset ball
+                self.logger.log_event('ball_lost_testing', {'testing_mode': True})
                 self.ball.reset()
 
         # Check win condition
@@ -235,9 +249,24 @@ class BreakoutGame:
         score_text = self.font.render(f"Score: {self.score}", True, config.COLOR_TEXT)
         self.screen.blit(score_text, (10, 40))
 
-        # Lives
-        lives_text = self.font.render(f"Lives: {self.lives}", True, config.COLOR_TEXT)
+        # Lives (show infinity symbol in testing mode)
+        if self.testing_mode:
+            lives_text = self.font.render(f"Lives: ∞", True, config.COLOR_TEXT)
+        else:
+            lives_text = self.font.render(f"Lives: {self.lives}", True, config.COLOR_TEXT)
         self.screen.blit(lives_text, (config.SCREEN_WIDTH - 150, 40))
+
+        # Testing mode indicator
+        if self.testing_mode:
+            testing_text = self.small_font.render(
+                "TESTING MODE (Infinite Lives)",
+                True,
+                (255, 255, 0)  # Yellow color
+            )
+            testing_rect = testing_text.get_rect(
+                center=(config.SCREEN_WIDTH // 2, 45)
+            )
+            self.screen.blit(testing_text, testing_rect)
 
     def draw_input_bars(self):
         """Draw visual representation of bilateral inputs (for debugging)."""
@@ -414,6 +443,17 @@ class BreakoutGame:
             center=(config.SCREEN_WIDTH // 2, controls_y + 30)
         )
         self.screen.blit(right_controls, right_rect)
+
+        # Testing mode instruction
+        testing_hint = self.small_font.render(
+            "Shift+Space: Toggle Testing Mode (Infinite Lives)",
+            True,
+            (150, 150, 150)  # Gray color for optional feature
+        )
+        testing_rect = testing_hint.get_rect(
+            center=(config.SCREEN_WIDTH // 2, controls_y + 70)
+        )
+        self.screen.blit(testing_hint, testing_rect)
 
     def reset_game(self):
         """Reset game to initial state for playing again."""

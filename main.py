@@ -10,6 +10,12 @@ Usage:
     python main.py --synthetic  # BrainFlow synthetic board (testing)
 
 Controls:
+    Left input:  a=0.8, s=0.5, d=0.3
+    Right input: j=0.3, k=0.5, l=0.8
+    Paddle movement: velocity = (right - left) * max_speed
+
+    SPACE: Start/Pause/Play Again
+    SHIFT+SPACE: Toggle Testing Mode (Infinite Lives)
     Keyboard mode:
         Left input:  a=0.8, s=0.5, d=0.3
         Right input: j=0.3, k=0.5, l=0.8

@@ -28,6 +28,7 @@ This design allows for nuanced control and is ideal for researching bilateral mo
 
 - **Game Controls:**
   - `SPACE` - Start Game / Pause-Resume / Play Again
+  - `SHIFT+SPACE` - Toggle Testing Mode (Infinite Lives)
   - `ESC` - Quit
 
 ### Control Examples
@@ -81,7 +82,14 @@ or
 
 3. **Pause**: Press `SPACE` during gameplay to pause/resume.
 
-4. **Game Over**: When you lose all lives or break all bricks:
+4. **Testing Mode**: Press `SHIFT+SPACE` to toggle testing mode (infinite lives):
+   - When enabled, the ball resets automatically without losing lives
+   - A yellow "TESTING MODE" indicator appears at the top of the screen
+   - Lives display shows "∞" symbol
+   - Perfect for practicing, testing control schemes, or demonstrating the game
+   - Testing mode persists across game restarts until manually disabled
+
+5. **Game Over**: When you lose all lives or break all bricks:
    - Your final score is displayed
    - Press `SPACE` to play again
    - Press `ESC` to quit
